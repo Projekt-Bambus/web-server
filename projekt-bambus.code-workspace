@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.iconTheme": "vscode-icons",
+    	"code-runner.executorMap": {
+    	    "javascript": "H:\\Instalace\\nodejs\\node"
+    	},
+		"code-runner.runInTerminal": true,
+		"liveServer.settings.multiRootWorkspaceName": "projekt-bambus"
+	}
+}
