@@ -63,5 +63,23 @@ function updateLockDisplay() {
     lockImgElement.setAttribute("src", lockStates[lockState].assetUrl);
 }
 
+
+function displayInfo(option) {
+    var infoDisplay = document.getElementById("infoDisplay");
+    switch (option) {
+        case 1:
+            infoDisplay.innerHTML = "Light settings";
+            break;
+        case 2:
+            infoDisplay.innerHTML = "Sound settings";
+            break;
+        case 3:
+            infoDisplay.innerHTML = "Magnet settings";
+            break;
+
+        default:
+            infoDisplay.innerHTML = "No info available.";
+    }
+}
 updateLockDisplay();
 updateVolumeDisplay();
