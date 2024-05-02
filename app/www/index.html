@@ -1,85 +1,44 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="/assets/icons/helldivers.ico">
     <title>Dashboard</title>
-    <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>
-        Projekt BAMBUS - Dashboard
-    </h1>
-    <main>
-        <div id="controls">
-            <div id="sound-control" class="control-module">
-                <h2> Ovládání Zvuku </h2>
-                <div id="volume">
-                    <input type="range" min="0" max="100" value="50" class="slider" id="volume-slider">
-                    <button id="volume-switch" onclick="switchVolume()">
-                        <img src="assets/icons/volume-off.svg" alt="Volume Image" id="volume-img"/>
-                    </button>
+    <div class="background">
+
+    </div>
+    <div class="body">
+        <div class="headsup">
+            <a>Logged in as:</a>
+            <div class="main">
+                <div class="left">
+                    <div class="starship">
+                        
+                    </div>
+                    <div class="settings-buttons">
+
+                    </div>
+                    <div class="settings">
+
+                    </div>
+                    <div class="unlock">
+
+                    </div>
+
                 </div>
-                <div id="sound-file">
-                    <input type="file" id="sound-file-picker">
-                </div>
-            </div>
-            <div id="light-control" class="control-module">
-                <h2> Ovládání Světel </h2>
-            </div>
-            <div id="electromagnet-control" class="control-module">
-                <h2> Ovládání Elektromagnetu </h2>
-            </div>
-            <div id="lock-control" class="control-module">
-                <h2> Bezpečnostní systém </h2>
-                <div id="lock-state"> UZAMKNUTO </div>
-                <button id="lock-switch" class="locked" onclick="switchLock()">
-                    <img src="assets/icons/lock-locked.svg" alt="Lock Image" id="lock-img"/>
-                </button>
-            </div>
-        </div>
-        <div id="logs">
-            <h2>Logging output:</h2>
-            <div id="log-output">
-                <div id="log-output-container">
-                    <span>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                        [INFO] Testing - Something [29/4/2024 15:32:53:366]<br>
-                    </span>
+                <div class="right">
+                    <div class="console">
+
+                    </div>
+                    <div class="info-box">
+
+                    </div>        
                 </div>
             </div>
         </div>
-    </main>
-    <footer>
-        Helldivers is a registred trademark of SONY INTERACTIVE ENTERTAINMENT LLC.<br>
-        We are not affiliated with Helldivers or SONY INTERACTIVE ENTERTAINMENT LLC.
-    </footer>
+    </div>
 </body>
 </html>
