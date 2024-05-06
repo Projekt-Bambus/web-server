@@ -10,6 +10,7 @@
     background-size: cover;
     background-position: center;
     z-index: -1;    
+    background-color: #4C4C4C;
 
 }
 
@@ -28,7 +29,7 @@
     width: 1650px;
     height: 20px;
 
-    color: black;
+    color: white;
 }
 
 .main {
@@ -141,22 +142,22 @@
     border-bottom: 1px solid black;
 }
 
-.unlock {
-    border-top: 1px solid#868686;
-    border-left: 1px solid#868686;
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
+    .unlock {
+        border-top: 1px solid#868686;
+        border-left: 1px solid#868686;
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
 
-    width: 300px;
-    height: 350px;
+        width: 300px;
+        height: 350px;
 
-    margin-top: -351px;
-    margin-left: 575px;
-    color: #FFE800;
+        margin-top: -351px;
+        margin-left: 575px;
+        color: #FFE800;
 
-    background-color: #666666;
+        background-color: #666666;
 
-}
+    }
 
 .console {
     border-top: 1px solid#868686;
@@ -266,3 +267,20 @@
 
 
 } 
+
+
+.unlock-img {
+
+    margin-top: 65px;
+    margin-left: 15px;
+
+    width: 255px;
+    height: 220px;
+
+    text-align: center;
+}
+
+.unlock-img img {
+    width: 100%;
+    height: 100%;
+}

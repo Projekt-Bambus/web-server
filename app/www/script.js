@@ -68,13 +68,13 @@ function displayInfo(option) {
     var infoDisplay = document.getElementById("infoDisplay");
     switch (option) {
         case 1:
-            infoDisplay.innerHTML = "Light settings";
+            infoDisplay.innerHTML = "<img src='assets/icons/Screenshot 2024-05-06 111455.png'</img>";
             break;
         case 2:
-            infoDisplay.innerHTML = "Sound settings";
+            infoDisplay.innerHTML = "<img src='assets/icons/Screenshot 2024-05-06 111528.png'</img>";
             break;
         case 3:
-            infoDisplay.innerHTML = "Magnet settings";
+            infoDisplay.innerHTML = "<img src='assets/icons/Screenshot 2024-05-06 111515.png'</img>";
             break;
 
         default:
