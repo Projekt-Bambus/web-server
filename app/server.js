@@ -7,6 +7,20 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 function main() {
+	
+
+	app.post("/login", (req,res) => {
+		console.log("Login POST");
+		//const { username, password } = req.body;
+		console.log(req.body);
+
+		if (username == "admin" && password == "admin") {
+
+		}
+
+		res.status(200).json({ message: 'Login successful' });
+	})
+
 	app.use(
 		serveStatic((__dirname + '/www/'), {
 			setHeaders: function(res, path) {
@@ -24,14 +38,6 @@ function main() {
 		}
 	);
 
-	app.post("/login", (req,res) => {
-		const { username, password } = req.body;
-
-		if (username == "admin" && password == "admin") {
-
-		}
-	})
-
 	setInterval(() => {
 	    io.emit('time', { time: new Date().toJSON()});
 	    console.log( 'EMIT: time');
@@ -45,7 +51,7 @@ function main() {
     	    console.log('EMIT: fromServers');
     	});
 	});
-		
+	
 	server.listen(EXPRESS_PORT, () => {
 		console.log(`Projekt bambus listening on port ${EXPRESS_PORT}`);
 	});

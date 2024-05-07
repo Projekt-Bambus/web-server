@@ -6,6 +6,17 @@ const VOLUME_SLIDER_ID = "volume-slider";
 const VOLUME_SWITCH_ID = "volume-switch";
 
 let isInitialised = false;
+const state = {
+    locked: true,
+    magnet: false,
+    lights: {
+        someId: false
+    },
+    volume: {
+        muted: false,
+        value: 50
+    }
+}
 
 const socket = io();
 
@@ -56,17 +67,14 @@ updateVolumeDisplay();
 */
 
 // Locking
-let lockState = "locked";
 
 const lockStates = {
     locked: {
         displayName: "Lock - Locked",
-        class: "locked",
         assetUrl: "assets/icons/lock-locked.svg"
     },
     unlocked: {
         displayName: "Lock - Unlocked",
-        class: "unlocked",
         assetUrl: "assets/icons/lock-open.svg"
     }
 }
@@ -77,31 +85,36 @@ function getlockState() {
 }
 
 function switchLock() {
-    if (lockState == "locked") lockState = "unlocked";
-    else lockState = "locked";
+    state.locked = !state.locked;
     updateLockDisplay();
 }
 
-function updateLockDisplay() { 
-    const lockSwitchElement = document.getElementById(LOCK_SWITCH_ID);
+function updateLockDisplay() {
+    const lockState = state.locked ? "locked" : "unlocked";
     const lockStateElement = document.getElementById(LOCK_STATE_ID);
     const lockImgElement = document.getElementById(LOCK_IMG_ID);
-    lockStateElement.innerHTML = lockStates[lockState].displayName;
-    lockSwitchElement.classList.remove(...lockSwitchElement.classList);
-    lockSwitchElement.classList.add(lockStates[lockState].class);
+    lockStateElement.innerText = lockStates[lockState].displayName;
     lockImgElement.setAttribute("src", lockStates[lockState].assetUrl);
 }
 
 updateLockDisplay();
 
 // Module display
+const moduleNames = {
+    "lights-module": "Settings - Lights",
+    "sound-module": "Settings - Sound",
+    "magnet-module": "Settigs - Magnet"
+}
+
 function displayInfo(option) {
     const elementsInside = [...document.querySelectorAll('#infoDisplay .module')];
     elementsInside.forEach((element) => { // Hides all elements except for the selected option
-        element.classList.remove('hidden');
-        if (element.id === option) return;
         element.classList.add('hidden');
+        if (element.id === option) element.classList.remove('hidden');
     });
+
+    window.localStorage.setItem("recentModule",option); //Remember selected module
+    document.getElementById("module-text").innerText = moduleNames[option]; //Update name
 }
 
-displayInfo("lights-module")
+displayInfo(window.localStorage.getItem("recentModule") ?? "lights-module");
