@@ -1,24 +1,25 @@
 {
     "name": "projekt-bambus-backend",
-    "description": "Our great project.",
+    "description": "Our great project, inspired by Helldivers.",
     "version": "0.0.9",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/paveldobcz23/projekt-bambus"
+        "url": "https://github.com/projekt-bambus/web-server/"
     },
     "keywords": [],
-    "author": "",
+    "author": "Team Projekt BAMBUS",
     "license": "UNLICENSED",
     "bugs": {
-        "url": "https://github.com/paveldobcz23/projekt-bambus/issues"
+        "url": "https://github.com/projekt-bambus/web-server/issues"
     },
-    "homepage": "paveldobcz23.github.io/projekt-bambus/",
+    "homepage": "",
     "dependencies": {
         "express": "^4.19.2",
         "mqtt": "^5.5.3",
-        "serve-static": "^1.15.0"
+        "serve-static": "^1.15.0",
+        "socket.io": "^4.7.5"
     }
 }

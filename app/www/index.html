@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" type="text/javascript"></script>
+    <link rel="icon" type="image/x-icon" href="/assets/icons/helldivers.ico">
     <title>Dashboard</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js'></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="background">
@@ -21,9 +23,9 @@
                         
                     </div>
                     <div class="settings-buttons">
-                        <a><button onclick="displayInfo(1)">Lights</button></a>
-                        <a><button onclick="displayInfo(2)">Sound</button></a>
-                        <a><button onclick="displayInfo(3)">Magnet</button></a>
+                        <a><button onclick="displayInfo('lights-module')">Lights</button></a>
+                        <a><button onclick="displayInfo('sound-module')">Sound</button></a>
+                        <a><button onclick="displayInfo('magnet-module')">Magnet</button></a>
 
                     </div>
                     <div class="settings">
@@ -31,15 +33,23 @@
                             <a>Settings</a>
                         </div>
                         <div class="inside-module-settings" id="infoDisplay">
-
+                            <div id="lights-module" class="module">
+                                <img src='assets/icons/Screenshot 2024-05-06 111455.png'</img>
+                            </div>
+                            <div id="sound-module" class="module">
+                                <img src='assets/icons/Screenshot 2024-05-06 111528.png'</img>
+                            </div>
+                            <div id="magnet-module" class="module">
+                                <img src='assets/icons/Screenshot 2024-05-06 111515.png'</img>
+                            </div>
                         </div>
 
                     </div>
                     <div class="unlock">
-                        <div class="text">
+                        <div class="text" id="lock-state">
                             Unlock
                         </div> 
-                        <div class="inside-module-unlock">
+                        <div class="inside-module-unlock" id="lock-switch">
                         <div class="unlock-img">
                             <img id="lock-img" src="assets/icons/lock-locked.svg" alt="Lock Icon" onclick="switchLock()">
                         </div>

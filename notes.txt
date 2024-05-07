@@ -4,3 +4,11 @@ zamek - viko
 svetla
 elektromagnet - switch
 logy - 
+
+MQTT Data format:
+prop:value
+
+lock:1||0
+magnet:1||0
+volume:0-100
+mute:1||0

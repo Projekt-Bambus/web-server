@@ -150,6 +150,7 @@
 }
 
 .unlock {
+
         border-top: 1px solid#868686;
         border-left: 1px solid#868686;
         border-right: 1px solid black;
@@ -295,4 +296,8 @@
 .unlock-img img {
     width: 100%;
     height: 100%;
+}
+
+.hidden {
+    display: none;
 }
