@@ -5,30 +5,35 @@ const VOLUME_IMG_ID = "volume-img";
 const VOLUME_SLIDER_ID = "volume-slider";
 const VOLUME_SWITCH_ID = "volume-switch";
 
-function getlockState() {
-    document.getElementById(LOCK_STATE_ID).innerHTML;
+let isInitialised = false;
+
+const socket = io();
+
+socket.on('fromServer', (data) => {         
+    console.log('ON: fromServer'); 
+    console.log(data);
+});
+    
+socket.on('time', (data) => {     
+  console.log('ON: time');
+  console.log(data);
+});
+
+function initialize() {
+    console.log("Socket emit: init");
+    socket.emit('init', { "props": true });
 }
 
-const lockStates = {
-    locked: {
-        displayName: "ZAMKNUTO",
-        class: "locked",
-        assetUrl: "assets/icons/lock-locked.svg"
-    },
-    unlocked: {
-        displayName: "ODEMKNUTO",
-        class: "unlocked",
-        assetUrl: "assets/icons/lock-open.svg"
-    }
-}
+initialize();
 
+//Volume
+/*
 let volume = 0;
 let muted = false;
 function switchVolume() {
     muted = !muted;
     updateVolumeDisplay();
 }
-
 document.getElementById(VOLUME_SLIDER_ID).addEventListener("input", (event) => {
     console.log(event.target.value)
     updateVolumeDisplay();
@@ -46,7 +51,31 @@ function updateVolumeDisplay() {
     volumeImageElement.setAttribute("src", getVolumeIcon());
 }
 
+
+updateVolumeDisplay();
+*/
+
+// Locking
 let lockState = "locked";
+
+const lockStates = {
+    locked: {
+        displayName: "Lock - Locked",
+        class: "locked",
+        assetUrl: "assets/icons/lock-locked.svg"
+    },
+    unlocked: {
+        displayName: "Lock - Unlocked",
+        class: "unlocked",
+        assetUrl: "assets/icons/lock-open.svg"
+    }
+}
+
+
+function getlockState() {
+    document.getElementById(LOCK_STATE_ID).innerHTML;
+}
+
 function switchLock() {
     if (lockState == "locked") lockState = "unlocked";
     else lockState = "locked";
@@ -63,23 +92,16 @@ function updateLockDisplay() {
     lockImgElement.setAttribute("src", lockStates[lockState].assetUrl);
 }
 
-
-function displayInfo(option) {
-    var infoDisplay = document.getElementById("infoDisplay");
-    switch (option) {
-        case 1:
-            infoDisplay.innerHTML = "Light settings";
-            break;
-        case 2:
-            infoDisplay.innerHTML = "Sound settings";
-            break;
-        case 3:
-            infoDisplay.innerHTML = "Magnet settings";
-            break;
-
-        default:
-            infoDisplay.innerHTML = "No info available.";
-    }
-}
 updateLockDisplay();
-updateVolumeDisplay();
+
+// Module display
+function displayInfo(option) {
+    const elementsInside = [...document.querySelectorAll('#infoDisplay .module')];
+    elementsInside.forEach((element) => { // Hides all elements except for the selected option
+        element.classList.remove('hidden');
+        if (element.id === option) return;
+        element.classList.add('hidden');
+    });
+}
+
+displayInfo("lights-module")
