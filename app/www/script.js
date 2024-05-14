@@ -70,11 +70,11 @@ updateVolumeDisplay();
 
 const lockStates = {
     locked: {
-        displayName: "Lock - Locked",
+        displayName: "Locked",
         assetUrl: "assets/icons/lock-locked.svg"
     },
     unlocked: {
-        displayName: "Lock - Unlocked",
+        displayName: "Unlocked",
         assetUrl: "assets/icons/lock-open.svg"
     }
 }
@@ -103,7 +103,7 @@ updateLockDisplay();
 const moduleNames = {
     "lights-module": "Settings - Lights",
     "sound-module": "Settings - Sound",
-    "magnet-module": "Settigs - Magnet"
+    "magnet-module": "Settings - Magnet"
 }
 
 function displayInfo(option) {
