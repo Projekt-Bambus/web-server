@@ -480,9 +480,45 @@ input:checked + .slider:before {
     margin-top: -30px;
 }
 
-.slidecontainer {
+.leftSound {
     border: 1px solid black;
 
-    width: 150px;
-    height: 50px;
+    width: 250px;
+    height: 290px;
+
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.rightSound{
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid #868686;
+    border-bottom: 1px solid #868686;
+
+    background-color: #232323;
+
+    height: 290px;
+    width: 210px;
+
+    margin-left: 270px;
+    margin-top: -290px;
+}
+
+.option {
+    cursor: pointer;
+    margin-bottom: 5px;
+  
+}
+.option:hover {
+    background-color: #282E20;
+}
+
+.songTitle {
+    border: 1px solid black;
+
+    width: 200px;
+    height: 200px;
+    margin-top: 5px;
+    margin-left: 5px;
 }

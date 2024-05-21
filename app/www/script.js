@@ -118,3 +118,39 @@ function displayInfo(option) {
 }
 
 displayInfo(window.localStorage.getItem("recentModule") ?? "lights-module");
+
+function displaySong(song) {
+    var songDisplay = document.getElementById("songDisplay");
+    switch (song) {
+        case 1:
+            songDisplay.innerHTML = "Song 1"
+            break;
+        case 2:
+            songDisplay.innerHTML = "Info for Option 2";
+            break;
+        case 3:
+            songDisplay.innerHTML = "Info for Option 3";
+            break;
+        case 4:
+            songDisplay.innerHTML = "Info for Option 4";
+            break;
+        case 5:
+            songDisplay.innerHTML = "Info for Option 5";
+            break;
+        case 6:
+            songDisplay.innerHTML = "Info for Option 6";
+            break;
+        case 7:
+            songDisplay.innerHTML = "Info for Option 7";
+            break;
+        case 8:
+            songDisplay.innerHTML = "Info for Option 8";
+            break;
+        case 9:
+            songDisplay.innerHTML = "Info for Option 9";
+            break;
+        // Add more cases for additional options
+        default:
+            infoDisplay.innerHTML = "No info available.";
+    }
+}
