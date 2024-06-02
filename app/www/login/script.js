@@ -4,14 +4,25 @@ const PASSWORD_VALUE_ID = "password-input";
 const URL = location.protocol + '//' + location.host + location.pathname;
 
 function submitLogin() {
-    fetch(URL, {
-        method: "POST",
-        body: JSON.stringify({
-          username: document.getElementById(USERNAME_VALUE_ID).value,
-          password: document.getElementById(PASSWORD_VALUE_ID).value,
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8"
-        }
-    });
+  
+
+  // Get the username and password from the input fields
+  var username = document.getElementById("username-input").value;
+  var password = document.getElementById("password-input").value;
+
+  if (username !== "admin" || password !== "mojeheslo") {
+      var errorImage = document.getElementById("wrong");
+      errorImage.style.display = "block";
+
+
+      var errorSound = document.getElementById("wrong-sound");
+      errorSound.play();
+
+
+      setTimeout(function() {
+          errorImage.style.display = "none";
+      }, 1000);
+  } else {
+  window.location.href = "../index.html"
+  }
 }
