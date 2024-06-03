@@ -11,9 +11,13 @@ const database = mysql.createPool({
 //console.log(process.env);
 console.log(crypto.SHA512("admin").toString());
 
+function toSqlDatetime(date) {
+    return date.toISOString().slice(0, 19).replace('T', ' ');
+}
 
-function main() {
-    database.query("SELECT * from login",null, (err, result) => {
+async function main() {
+    await cleanupSessions();
+    database.query("SELECT * from login", (err, result) => {
         if (err) {
             console.error(err);
             return;
@@ -21,6 +25,16 @@ function main() {
         console.log(result);
     })
     console.log("Running main database!");
+}
+
+async function cleanupSessions() {
+    database.query("DELETE FROM sessions WHERE expires < NOW();", (err, result) => {
+        console.log("Session CLEANUP");
+        if (err) {
+            console.error(err);
+        }
+        console.log(result);
+    })
 }
 
 async function checkPassword(username,password) {
@@ -43,8 +57,66 @@ async function checkPassword(username,password) {
     return isCorrect === true;
 }
 
-async function createSession(username) {
-
+async function getSession(sessionId) {
+    const sessionData = await new Promise((resolve, reject) => 
+        database.query("SELECT * from sessions WHERE id = ?",[sessionId], (err, result) => {
+            console.log("Session SELECT");
+            if (err) {
+                reject(err);
+            }
+            resolve(result);
+        })
+    ).catch((reason) => {
+        console.error(`Failed session select!`);
+        console.error(reason);
+    });
+    return sessionData;
 }
 
-module.exports = { main, checkPassword };
+async function createSession(username, expireDate) {
+    // Checks if the user exists and gets their password hash
+    const passwordHash = await new Promise((resolve, reject) =>
+        database.query("SELECT * from login WHERE username = ?",[username], (err, result) => {
+            if (err) {
+                reject(err);
+            }
+            if (result.length == 0 || result[0]?.username != username) {
+                reject("Invalid username!");
+            }
+            resolve(result[0]?.password_hash);
+        })
+    );
+    // Creates a session ID generated as hash from username,password hash,current datetime and random string
+    const sessionId = crypto.SHA256(
+        `${username}:${passwordHash}:${new Date().getMilliseconds()}:${Math.random()}`
+    ).toString();
+    // Inserts new session into the database
+    await new Promise((resolve, reject) => 
+        database.query(
+            "INSERT INTO sessions (id, username, expires, timestamp) VALUES (?, ?, ?, NOW());",
+            [sessionId,username,toSqlDatetime(expireDate)],
+            (err, result) => {
+                console.log(`Session INSERT`);
+                if (err) {
+                    reject(err);
+                }
+                console.log(result);
+                resolve(true);
+            }
+        )
+    );
+    // Returns ID back for caller to use
+    return sessionId;
+}
+
+async function deleteSession(id) {
+    database.query("DELETE FROM sessions WHERE id = ?",[id], (err, result) => {
+        console.log("Session DELETE");
+        if (err) {
+            throw err;
+        }
+        console.log(result);
+    });
+}
+
+module.exports = { main, getSession, checkPassword, createSession, deleteSession };
