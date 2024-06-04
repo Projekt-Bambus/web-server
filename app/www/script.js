@@ -5,6 +5,9 @@ const VOLUME_IMG_ID = "volume-img";
 const VOLUME_SLIDER_ID = "volume-slider";
 const VOLUME_SWITCH_ID = "volume-switch";
 
+const ROOT_URL = location.protocol + '//' + location.host;
+const LOGOUT_URL = ROOT_URL + "/logout";
+
 let isInitialised = false;
 const state = {
     locked: true,
@@ -37,6 +40,15 @@ function initialize() {
 
 initialize();
 
+
+function logout() {
+    console.info("LOGOUT");
+    fetch(LOGOUT_URL, {
+        method: "POST"
+    }).then((res) => {
+        console.log(res);
+    });
+}
 //Volume
 /*
 let volume = 0;

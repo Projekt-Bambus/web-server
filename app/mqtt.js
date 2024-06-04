@@ -1,5 +1,5 @@
 const Mqtt = require("mqtt");
-const Server = require("server.js")
+const Server = require("./server.js")
 const MQTT_BROKER_ADDRESS = "mqtt://trejbycloud.duckdns.org:31011";
 const TOPIC_SEND = "poslouchat";
 const TOPIC_RECIEVE = "posilat";
