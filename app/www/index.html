@@ -16,6 +16,7 @@
     <div class="body">
         <div class="headsup">
             <a>Logged in as:</a>
+        </div>
             <div class="main">
                 <div class="left">
                     <div class="starship">
@@ -104,12 +105,54 @@
                                     </div>
                                 </div>
 
+                                <div class="lightSubmitButton">
+                                    <button id="lightSubmitButton">Submit</button>
+                                </div>
+
                             </div>
+                            
                             <div id="sound-module" class="module">
-                                <img src='assets/icons/Screenshot 2024-05-06 111528.png'>
+                                <div class="leftSound">
+                                    <div class="songTitle">
+
+                                        <div id="songDisplay" class="songDisplay">                                            
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="slidecontainer">
+                                        <input type="range" min="1" max="100" value="50" class="range" id="myRange">
+
+                                    </div>
+
+                                    <div class="playButton">
+                                        <button id="playButton">Play</button>
+                                    </div>
+                                
+                                </div>
+                                <div class="rightSound">
+                                    <div class="options">
+                                        <div class="option" onclick="displaySong(1)">Song 1</div>
+                                        <div class="option" onclick="displaySong(2)">Song 2</div>
+                                        <div class="option" onclick="displaySong(3)">Song 3</div>
+                                        <div class="option" onclick="displaySong(4)">Song 4</div>
+                                        <div class="option" onclick="displaySong(5)">Song 5</div>
+                                        <div class="option" onclick="displaySong(6)">Song 6</div>
+                                        <div class="option" onclick="displaySong(7)">Song 7</div>
+                                        <div class="option" onclick="displaySong(8)">Song 8</div>
+                                        <div class="option" onclick="displaySong(9)">Song 9</div>
+                                        <div class="option" onclick="displaySong(10)">Song 10</div>
+                                        <div class="option" onclick="displaySong(11)">Song 11</div>
+                                        <div class="option" onclick="displaySong(12)">Song 12</div>
+                        
+                                      </div>  
+                                </div>
                             </div>
+                            
                             <div id="magnet-module" class="module">
                                 <img src='assets/icons/Screenshot 2024-05-06 111515.png'>
+
                             </div>
                         </div>
                     </div>
@@ -142,13 +185,37 @@
 
                     </div>
                     <div class="info-box">
-                        <a><button>Settings</button></a>
-                        <a><button>About</button></a>
+                        <a><button id="settingsButton">Settings</button></a>
+                        <a><button id="aboutButton">About</button></a>
                         <a href="/logout"><button>Log out</button></a>
                     </div>        
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="settingsPopup" class="popup">
+
+
+        <div class="popup-content">
+            <span class="close" id="closePopup">&times;</span>
+            <h2>Settings</h2>
+            <a>Coming soon..</a>
+        </div>
+    
+    </div>
+
+    <div id="aboutPopup" class="popup2">
+
+        <div class="popup-content2">
+            <span class="close2" id="closePopup2">&times;</span>
+            <h2>About</h2>
+
+            <p>Muffinz - GUI and Hardware controls
+            <p>PavelDob23 - Communication and transmission protocols
+            <p>Linhja - Ship model
+        </div>
+    
     </div>
 
     

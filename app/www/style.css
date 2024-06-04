@@ -110,10 +110,7 @@
 
     background-color: transparent;
 
-    border-bottom: 2px solid lightgray;
-    border-left: 2px solid #FFFFFF;
-    border-right: 2px solid lightgray;
-    border-top: 2px transparent;
+
 
     
     color: white;
@@ -124,9 +121,7 @@
 
 .settings-buttons button:hover {
     cursor: pointer;
-    border: 2px dashed #FFE900;
 
-    color: #FFE900;
 }
 
 .settings {
@@ -284,7 +279,7 @@
 
 .unlock-img {
 
-    margin-top: 65px;
+    margin-top: 50px;
     margin-left: 15px;
 
     width: 255px;
@@ -383,25 +378,6 @@ input:checked + .slider:before {
     margin-left: 165px;
 }
 
-.triangle {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px 0 8px 13.9px;
-    border-color: transparent transparent transparent #FFE800;
-    cursor: pointer;
-    margin: 0 10px;
-}
-
-.triangle.left {
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px 13.9px 8px 0;
-    border-color: transparent #FFE800 transparent transparent;
-    cursor: pointer;
-    margin: 0 10px;
-}
 
 
 .text {
@@ -419,6 +395,16 @@ input:checked + .slider:before {
     
 }
 
+.lightSubmitButton {
+    margin-top: 40px;
+    margin-left: 200px;
+}
+
+.lightSubmitButton button{
+    width: 100px;
+    height: 30px;
+}
+
 .textLabel {
     border: 1px solid transparent;
 
@@ -434,7 +420,7 @@ input:checked + .slider:before {
     width: 50px;
     height: 16px;
     margin-left: 370px;
-    margin-top: -40px;
+    margin-top: -37px;
 }
 
 .textLabel3 {
@@ -450,10 +436,12 @@ input:checked + .slider:before {
     width: 140px;
     height: 40px;
 
+    position: relative;
+
     border: 1px solid transparent;
 
 
-    margin-top: 90px;
+    margin-top: -32px;
 }
 
 .selector2 {
@@ -464,7 +452,7 @@ input:checked + .slider:before {
 
 
     margin-left: 165px;
-    margin-top: -30px;
+    margin-top: -25px;
 }
 
 .selector3 {
@@ -477,3 +465,223 @@ input:checked + .slider:before {
     margin-left: 165px;
     margin-top: -30px;
 }
+
+.leftSound {
+    border: 1px solid transparent;
+
+    width: 250px;
+    height: 290px;
+
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.rightSound{
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid #868686;
+    border-bottom: 1px solid #868686;
+
+    background-color: #232323;
+
+    height: 290px;
+    width: 210px;
+
+    margin-left: 270px;
+    margin-top: -290px;
+}
+
+.option {
+    cursor: pointer;
+    margin-bottom: 5px;
+  
+}
+.option:hover {
+    background-color: #636361;
+}
+
+.songTitle {
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid #868686;
+    border-bottom: 1px solid #868686;
+
+    width: 200px;
+    height: 20px;
+    margin-top: 5px;
+    margin-left: 25px;
+    text-align: center;
+}
+
+.playButton {
+    width: 50px;
+    height: 25px;
+
+    border: 1px solid transparent;
+
+    margin-top: 560px;
+    margin-left: 75px;
+}
+
+.playButton button {
+    width: 100px;
+    height: 30px;
+    
+}
+
+
+.slidecontainer {
+
+    margin-top: -500px;
+    width: 100px;
+    height: 20px;
+    margin-left: -55px;
+
+    font-size: 14px;
+
+    border: 1px solid transparent;
+}
+
+
+  
+  .range {
+
+    margin-top: 515px;
+    margin-left: 100px;
+
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .range:hover {
+    opacity: 1;
+  }
+  
+  .range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 23px;
+    height: 24px;
+    border: 0;
+    background: url('assets/icons/helldiversmall.png');
+    cursor: pointer;
+  }
+  
+  .range::-moz-range-thumb {
+    width: 23px;
+    height: 24px;
+    border: 0;
+    background: url('assets/icons/helldiversmall.png');
+    cursor: pointer;
+  }
+
+
+
+
+.popup {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: #666666;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid #888;
+    width: 300px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    animation: animatepopup 0.4s;
+    border-radius: 10px;
+    color: #FFE800;
+}
+
+.popup-content a{
+    color: white;
+}
+
+@keyframes animatepopup {
+    from {top: -300px; opacity: 0} 
+    to {top: 0; opacity: 1}
+}
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.popup2 {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content2 {
+    background-color: #666666;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid #888;
+    width: 300px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    animation: animatepopup 0.4s;
+    border-radius: 10px;
+    color: #FFE800;
+}
+
+.popup-content2 p{
+    color: white;
+}
+
+
+
+.close2 {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close2:hover,
+.close2:focus {
+
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.module {
+    border: 1px solid transparent;
+}
+
+

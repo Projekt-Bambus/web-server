@@ -130,3 +130,100 @@ function displayInfo(option) {
 }
 
 displayInfo(window.localStorage.getItem("recentModule") ?? "lights-module");
+
+function displaySong(song) {
+    var songDisplay = document.getElementById("songDisplay");
+    switch (song) {
+        case 1:
+            songDisplay.innerHTML = "Song 1"
+            break;
+        case 2:
+            songDisplay.innerHTML = "Song 2";
+            break;
+        case 3:
+            songDisplay.innerHTML = "Song 3";
+            break;
+        case 4:
+            songDisplay.innerHTML = "Song 4";
+            break;
+        case 5:
+            songDisplay.innerHTML = "Song 5";
+            break;
+        case 6:
+            songDisplay.innerHTML = "Song 6";
+            break;
+        case 7:
+            songDisplay.innerHTML = "Song 7";
+            break;
+        case 8:
+            songDisplay.innerHTML = "Song 8";
+            break;
+        case 9:
+            songDisplay.innerHTML = "Song 9";
+            break;
+        case 10:
+            songDisplay.innerHTML = "Song 10";
+            break;
+        case 11:
+            songDisplay.innerHTML = "Song 11";
+            break;
+        case 12:
+            songDisplay.innerHTML = "Song 12";
+            break;
+
+
+        default:
+            infoDisplay.innerHTML = "No info available.";
+    }
+}
+
+
+
+
+
+    var popup = document.getElementById("settingsPopup");
+    var btn = document.getElementById("settingsButton");
+    var span = document.getElementById("closePopup");
+
+    btn.onclick = function() {
+        popup.style.display = "flex";
+    }
+
+    span.onclick = function() {
+        popup.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == popup) {
+            popup.style.display = "none";
+        }
+    }
+
+
+    var popup2 = document.getElementById("aboutPopup");
+    var btn2 = document.getElementById("aboutButton");
+    var span2 = document.getElementById("closePopup2");
+
+    btn2.onclick = function() {
+        popup2.style.display = "flex";
+    }
+
+    span2.onclick = function() {
+        popup2.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == popup2) {
+            popup2.style.display = "none";
+        }
+    }
+
+
+
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+  output.innerHTML = this.value;
+}

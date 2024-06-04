@@ -22,10 +22,15 @@
 }
 
 .title{
+    text-align: center;
+}
+
+.title a {
     color: #FFE800;
     text-shadow: 2px 2px 5px black;
-    text-align: center;
+
     font-size: 40px;
+    text-decoration: none;
 }
 .login-container {
     border-top: 1px solid#868686;
@@ -37,7 +42,7 @@
 
 
     width: 500px;
-    height: 475px;
+    height: 500px;
 
     margin-left: 50px;
     margin-top: 75px;
@@ -82,13 +87,18 @@
     width: 100px;
     border: none;
     outline: none;
+    border-radius: 8px;
     background: darkgray;
-        color: black;
+    color: black;
     font-size: 16px;
     cursor: pointer;
 
     margin-left: 175px;
     margin-top: 28px;
+}
+
+.loginBtn:hover {
+    background: rgb(194, 192, 192);
 }
 
 
@@ -103,3 +113,31 @@ color: #FFE800;
 font-size: 20px;
 }
 
+
+.silly {
+    border: 1px solid transparent;
+    width: 300px;
+    height: 300px;
+
+    margin-left: 1100px;
+    margin-top: -350px;
+
+}
+
+.silly img{
+    width: 400px;
+    height: 600px;
+}
+
+.wrong{
+    display: none;
+    margin-left: 650px;
+    margin-top: -400px;
+    width: 400px;
+    height: 400px;
+}
+
+.wrong img{
+    width: 100px;
+    height: 100px;
+}
