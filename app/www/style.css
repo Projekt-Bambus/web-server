@@ -685,3 +685,28 @@ input:checked + .slider:before {
 }
 
 
+#light1 {
+    display:none;
+    width: 30px;
+    height: 30px;
+    margin-top: -665px;
+    margin-left: 340px;
+}
+
+
+#light2 {
+    display:none;
+    width: 30px;
+    height: 30px;
+    margin-top: -665px;
+    margin-left: 360px;
+}
+
+
+#light3 {
+    display:none;
+    width: 30px;
+    height: 30px;
+    margin-top: -665px;
+    margin-left: 360px;
+}
