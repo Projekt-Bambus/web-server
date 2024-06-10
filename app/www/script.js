@@ -225,69 +225,77 @@ var output = document.getElementById("demo");
 
 document.addEventListener('DOMContentLoaded', function () {
     const sets = [
-        { selectId: 'options1', buttonId: 'lightSubmitButton', imageId: 'light1' },
-        { selectId: 'options2', buttonId: 'lightSubmitButton', imageId: 'light2' },
-        { selectId: 'options3', buttonId: 'lightSubmitButton', imageId: 'light3' }
+        { selectId: 'options1', checkboxId: 'checkbox1', imageId: 'light1' },
+        { selectId: 'options2', checkboxId: 'checkbox2', imageId: 'light2' },
+        { selectId: 'options3', checkboxId: 'checkbox3', imageId: 'light3' }
     ];
 
-    sets.forEach(set => {
-        const selectElement = document.getElementById(set.selectId);
-        const lightImage = document.getElementById(set.imageId);
-        const submitButton = document.getElementById(set.buttonId);
-        let blinkInterval;
+    const submitButton = document.getElementById('lightSubmitButton');
+    const blinkIntervals = {};
 
-        if (!selectElement || !lightImage || !submitButton) {
-            console.error(`Elements for set ${set.selectId} not found`);
-            return;
-        }
+    if (!submitButton) {
+        console.error('Submit button not found');
+        return;
+    }
 
-        console.log(`Event listener attached to ${set.buttonId}`);
+    submitButton.addEventListener('click', function () {
+        sets.forEach(set => {
+            const selectElement = document.getElementById(set.selectId);
+            const checkboxElement = document.getElementById(set.checkboxId);
+            const lightImage = document.getElementById(set.imageId);
 
-        function updateLight() {
-            clearInterval(blinkInterval);
-            const selectedOption = selectElement.value;
-            console.log(`Selected Option for ${set.selectId}:`, selectedOption);
+            if (!selectElement || !checkboxElement || !lightImage) {
+                console.error(`Elements for set ${set.selectId} not found`);
+                return;
+            }
 
-            switch (selectedOption) {
-                case 'Off':
+            function updateLight() {
+                if (blinkIntervals[set.imageId]) {
+                    clearInterval(blinkIntervals[set.imageId]);
+                }
+
+                if (!checkboxElement.checked) {
                     console.log(`Turning off the light ${set.imageId}`);
                     lightImage.style.display = 'none';
-                    break;
-                case 'Solid':
-                    console.log(`Setting light ${set.imageId} to solid`);
-                    lightImage.style.display = 'block';
-                    break;
-                case 'Blink2s':
-                    console.log(`Setting light ${set.imageId} to blink every 2 seconds`);
-                    blinkImage(2000);
-                    break;
-                case 'Blink5s':
-                    console.log(`Setting light ${set.imageId} to blink every 5 seconds`);
-                    blinkImage(5000);
-                    break;
-                case 'Blink10s':
-                    console.log(`Setting light ${set.imageId} to blink every 10 seconds`);
-                    blinkImage(10000);
-                    break;
-                default:
-                    console.log('Unknown option selected');
-                    break;
+                    return;
+                }
+
+                const selectedOption = selectElement.value;
+                console.log(`Selected Option for ${set.selectId}:`, selectedOption);
+
+                switch (selectedOption) {
+                    case 'Solid':
+                        console.log(`Setting light ${set.imageId} to solid`);
+                        lightImage.style.display = 'block';
+                        break;
+                    case 'Blink2s':
+                        console.log(`Setting light ${set.imageId} to blink every 2 seconds`);
+                        blinkImage(2000);
+                        break;
+                    case 'Blink5s':
+                        console.log(`Setting light ${set.imageId} to blink every 5 seconds`);
+                        blinkImage(5000);
+                        break;
+                    case 'Blink10s':
+                        console.log(`Setting light ${set.imageId} to blink every 10 seconds`);
+                        blinkImage(10000);
+                        break;
+                    default:
+                        console.log('Unknown option selected');
+                        break;
+                }
             }
-        }
 
-        function blinkImage(interval) {
-            lightImage.style.display = 'block';
-            let visible = true;
-            blinkInterval = setInterval(function () {
-                lightImage.style.display = visible ? 'none' : 'block';
-                visible = !visible;
-            }, interval);
-        }
+            function blinkImage(interval) {
+                lightImage.style.display = 'block';
+                let visible = true;
+                blinkIntervals[set.imageId] = setInterval(function () {
+                    lightImage.style.display = visible ? 'none' : 'block';
+                    visible = !visible;
+                }, interval);
+            }
 
-        submitButton.addEventListener('click', function () {
-            console.log(`Submit button ${set.buttonId} clicked`);
             updateLight();
         });
     });
 });
-
