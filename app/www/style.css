@@ -1,4 +1,12 @@
+@font-face {
+    font-family: 'CascadiaMono';
+    src: url('/assets/fonts/CascadiaMono.woff2');
+}
 
+.config-disabled {
+    background-color: #6c6c6c;
+    color: #939393;
+}
 
 .background {
     position: fixed;
@@ -259,6 +267,7 @@
     background-color: #323232;
 
     color: white;
+    font-family: CascadiaMono, monospace;
 }
 
 .inside-module-console p {
@@ -278,6 +287,9 @@
 
 
 .unlock-img {
+
+    border: none;
+    background: none;
 
     margin-top: 50px;
     margin-left: 15px;
@@ -346,6 +358,10 @@ input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
+}
+
+input:disabled + .slider {
+    background-color: #6c6c6c;
 }
   
   /* Rounded sliders */
@@ -492,11 +508,23 @@ input:checked + .slider:before {
 }
 
 .option {
+    border: none;
+    background: none;
+
+    width: 100%;
+    padding-bottom: 5px;
+
+    font-size: 18px;
+    color: white;
     cursor: pointer;
-    margin-bottom: 5px;
-  
 }
-.option:hover {
+
+.option:disabled {
+    background-color: #6c6c6c;
+    color: #939393;
+}
+
+.option:hover:not(:disabled) {
     background-color: #636361;
 }
 
@@ -557,7 +585,7 @@ input:checked + .slider:before {
     transition: opacity .2s;
   }
   
-  .range:hover {
+  .range:hover:not(:disabled) {
     opacity: 1;
   }
   
