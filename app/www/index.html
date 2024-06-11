@@ -13,12 +13,12 @@
     <div class="background"></div>
     <div class="body">
         <div class="headsup">
-            <a>Logged in as: <span id="username-display"></span></a>
+            Logged in as: <span id="username-display"></span>
         </div>
             <div class="main">
                 <div class="left">
                     <div class="starship">
-                        <img src="assets/icons/needthis.jpg" >
+                        <img src="assets/icons/lod2.png" >
                     </div>
                     <div class="settings-buttons">
                         <a><button onclick="displayInfo('lights-module')">Lights</button></a>
@@ -41,7 +41,6 @@
                                     
                                     <div class="selector">
                                         <label for="options">Mode:<label>
-
                                         <select name="options" id="config-light1-mode" disabled>
                                             <option value="1" id="L1Solid">Solid</option>
                                             <option value="2" id="L1Blink2s">Blinks 2s</option>
@@ -65,7 +64,6 @@
                                     
                                     <div class="selector2">
                                         <label for="options2">Mode:<label>
-
                                         <select name="options2" id="config-light2-mode" disabled>
                                             <option value="1" id="L2Solid">Solid</option>
                                             <option value="2" id="L2Blink2s">Blinks 2s</option>
@@ -89,7 +87,6 @@
                                     
                                     <div class="selector3">
                                         <label for="options3">Mode:<label>
-
                                         <select name="options3" id="config-light3-mode" disabled>
                                             <option value="1" id="L3Solid">Solid</option>
                                             <option value="2" id="L3Blink2s">Blinks 2s</option>
@@ -150,7 +147,14 @@
                             </div>
                             
                             <div id="magnet-module" class="module">
-                                <img src='assets/icons/Screenshot 2024-05-06 111515.png'>
+                                <div class="inside-magnet-module">
+                                    <label class="switch">
+                                        <input type="checkbox" id="checkbox20">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <p>OFF / ON</p>
+
+                                </div>
 
                             </div>
                         </div>
@@ -187,7 +191,10 @@
                         <a><button id="settingsButton">Settings</button></a>
                         <a><button id="aboutButton">About</button></a>
                         <a href="/logout"><button>Log out</button></a>
-                    </div>        
+                    </div>  
+                    <div class="promo">
+                        <img src="/app/www/assets/icons/promo.png"
+                    </div>      
                 </div>
             </div>
         </div>
@@ -215,5 +222,8 @@
             <p>Linhja - Ship model
         </div>
     </div>
+    <img src="/app/www/assets/icons/glight.png" id="light1" alt="Light1">
+    <img src="/app/www/assets/icons/glight.png" id="light2" alt="Light2">
+    <img src="/app/www/assets/icons/glight.png" id="light3" alt="Light3">
 </body>
 </html>

@@ -256,11 +256,82 @@ displayInfo(window.localStorage.getItem("recentModule") ?? "lights-module");
     }
 
 
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
 
-//var slider = document.getElementById("myRange");
-//var output = document.getElementById("demo");
-//output.innerHTML = slider.value;
-//
-//slider.oninput = function() {
-//  output.innerHTML = this.value;
-//}
+document.addEventListener('DOMContentLoaded', function () {
+    const sets = [
+        { selectId: 'options1', checkboxId: 'checkbox1', imageId: 'light1' },
+        { selectId: 'options2', checkboxId: 'checkbox2', imageId: 'light2' },
+        { selectId: 'options3', checkboxId: 'checkbox3', imageId: 'light3' }
+    ];
+
+    const submitButton = document.getElementById('lightSubmitButton');
+    const blinkIntervals = {};
+
+    if (!submitButton) {
+        console.error('Submit button not found');
+        return;
+    }
+
+    submitButton.addEventListener('click', function () {
+        sets.forEach(set => {
+            const selectElement = document.getElementById(set.selectId);
+            const checkboxElement = document.getElementById(set.checkboxId);
+            const lightImage = document.getElementById(set.imageId);
+
+            if (!selectElement || !checkboxElement || !lightImage) {
+                console.error(`Elements for set ${set.selectId} not found`);
+                return;
+            }
+
+            function updateLight() {
+                if (blinkIntervals[set.imageId]) {
+                    clearInterval(blinkIntervals[set.imageId]);
+                }
+
+                if (!checkboxElement.checked) {
+                    console.log(`Turning off the light ${set.imageId}`);
+                    lightImage.style.display = 'none';
+                    return;
+                }
+
+                const selectedOption = selectElement.value;
+                console.log(`Selected Option for ${set.selectId}:`, selectedOption);
+
+                switch (selectedOption) {
+                    case 'Solid':
+                        console.log(`Setting light ${set.imageId} to solid`);
+                        lightImage.style.display = 'block';
+                        break;
+                    case 'Blink2s':
+                        console.log(`Setting light ${set.imageId} to blink every 2 seconds`);
+                        blinkImage(2000);
+                        break;
+                    case 'Blink5s':
+                        console.log(`Setting light ${set.imageId} to blink every 5 seconds`);
+                        blinkImage(5000);
+                        break;
+                    case 'Blink10s':
+                        console.log(`Setting light ${set.imageId} to blink every 10 seconds`);
+                        blinkImage(10000);
+                        break;
+                    default:
+                        console.log('Unknown option selected');
+                        break;
+                }
+            }
+
+            function blinkImage(interval) {
+                lightImage.style.display = 'block';
+                let visible = true;
+                blinkIntervals[set.imageId] = setInterval(function () {
+                    lightImage.style.display = visible ? 'none' : 'block';
+                    visible = !visible;
+                }, interval);
+            }
+
+            updateLight();
+        });
+    });
+});

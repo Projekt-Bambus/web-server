@@ -76,6 +76,19 @@
 
 }
 
+.promo {
+    border: 1px transparent black;
+    width: 300px;
+    height: 140px;
+    margin-top: -10px;
+    margin-left: 220px;
+}
+
+.promo img {
+    width: 300px;
+    height: 140px;
+}
+
 .starship {
     border: 1px dotted black;
 
@@ -713,3 +726,38 @@ input:disabled + .slider {
 }
 
 
+#light1 {
+    display: none;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 140px;
+    left: 340px;
+}
+
+#light2 {
+    display: none;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 140px; 
+    left: 380px;
+}
+
+#light3 {
+    display: none;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 140px; 
+    left: 420px;
+}
+
+.inside-magnet-module {
+    border: 1px transparent black;
+    width: 80px;
+    height: 35px;
+
+    margin-top: 100px;
+    margin-left: 220px;
+}
