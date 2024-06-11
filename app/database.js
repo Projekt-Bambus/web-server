@@ -1,5 +1,5 @@
 const mysql = require('mysql2');
-const crypto = require('crypto-js');
+const crypto = require('node:crypto');
 
 const database = mysql.createPool({
     user: process.env.DB_USERNAME,
@@ -7,9 +7,6 @@ const database = mysql.createPool({
     host: process.env.DB_HOST,
     database: process.env.DB_NAME
 });
-
-//console.log(process.env);
-console.log(crypto.SHA512("admin").toString());
 
 function toSqlDatetime(date) {
     return date.toISOString().slice(0, 19).replace('T', ' ');
@@ -47,7 +44,7 @@ async function checkPassword(username,password) {
                 reject("Invalid username!");
             }
             const realPasswordHash = result[0]?.password_hash;
-            const inputPasswordHash = crypto.SHA512(password).toString();
+            const inputPasswordHash = crypto.createHash('sha512').update(password).digest('hex');
             resolve(realPasswordHash == inputPasswordHash);
         })
     ).catch((reason) => {
@@ -87,9 +84,9 @@ async function createSession(username, expireDate) {
         })
     );
     // Creates a session ID generated as hash from username,password hash,current datetime and random string
-    const sessionId = crypto.SHA256(
+    const sessionId = crypto.createHash('sha512').update(
         `${username}:${passwordHash}:${new Date().getMilliseconds()}:${Math.random()}`
-    ).toString();
+    ).digest('hex');
     // Inserts new session into the database
     await new Promise((resolve, reject) => 
         database.query(

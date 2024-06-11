@@ -5,50 +5,92 @@ const VOLUME_IMG_ID = "volume-img";
 const VOLUME_SLIDER_ID = "volume-slider";
 const VOLUME_SWITCH_ID = "volume-switch";
 
+// URL constants
 const ROOT_URL = location.protocol + '//' + location.host;
 const LOGOUT_URL = ROOT_URL + "/logout";
+const SOCKET_INIT_URL = ROOT_URL + "/socket-init";
+// ID constants
+const SOCKET_TOKEN_STORAGE_ID = "socketToken";
 
-let isInitialised = false;
+let initialSync = false;
 const state = {
-    locked: true,
-    magnet: false,
-    lights: {
-        someId: false
-    },
-    volume: {
-        muted: false,
-        value: 50
-    }
+    lock: 1,
+    magnet: 0, //!!
+
+    play: 1, //??
+    volume: 50,
+    song: 1,
+
+    light1: 0,
+    light2: 2,
+    light3: 1,
 }
 
-const socket = io();
+let socket;
 
-socket.on('fromServer', (data) => {         
-    console.log('ON: fromServer'); 
-    console.log(data);
-});
-    
-socket.on('time', (data) => {     
-  console.log('ON: time');
-  console.log(data);
-});
+function getCookieValue(name) {
+    let cookieList = document.cookie.split(";");
+    for (let i = 0; i < cookieList.length; i++) {
+        let cookiePair = cookieList[i].split("=");
+        if (name == cookiePair[0].trim()) {
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+    return null;
+}
 
-function initialize() {
-    console.log("Socket emit: init");
-    socket.emit('init', { "props": true });
+function enableAllInput() {
+    document.querySelectorAll('#config-songs .option').forEach(element => element.disabled = false);
+    document.querySelectorAll('*[id^=config]').forEach(element => element.disabled = false);
+}
+
+async function initialize() {
+    // Set username display
+    document.getElementById("username-display").innerText = getCookieValue("username");
+    // Get socket token
+    await fetch(SOCKET_INIT_URL, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+        }
+    })
+    .then(res => res.json())
+    .then((res) => {
+        window.sessionStorage.setItem(SOCKET_TOKEN_STORAGE_ID,res.token);
+    });
+    // Connect to the socket
+    socket = io({
+        auth: {
+            token: window.sessionStorage.getItem(SOCKET_TOKEN_STORAGE_ID)
+        }
+    });
+    // Prepare socket events
+    socket.on('serverLog', (data) => {
+        console.log('ON: serverLog'); 
+        console.log(data);
+    });
+    socket.on('serverConfig', (data) => {
+        state[data.key] = data.value;
+        updateLockDisplay();
+        updateSongDisplay();
+        console.log('ON: serverConfig'); 
+        console.log(data);
+    });
+    // Synchronise client-server
+    socket.on('serverSync', (data) => {
+        initialSync = true;
+        console.log(data);
+        for (key in data.config) {
+            state[key] = data.config[key];
+        }
+        enableAllInput();
+        updateLockDisplay();
+        updateSongDisplay();
+    })
+    socket.emit('clientSync', { config: true, logHistory: 5 });
 }
 
 initialize();
-
-
-function logout() {
-    console.info("LOGOUT");
-    fetch(LOGOUT_URL, {
-        method: "POST"
-    }).then((res) => {
-        console.log(res);
-    });
-}
 //Volume
 /*
 let volume = 0;
@@ -78,41 +120,84 @@ function updateVolumeDisplay() {
 updateVolumeDisplay();
 */
 
-// Locking
+//# Locking
 
-const lockStates = {
-    locked: {
+const LOCK_STATES = [
+    {
+        displayName: "Unlocked",
+        assetUrl: "assets/icons/lock-open.svg"
+    },
+    {
         displayName: "Locked",
         assetUrl: "assets/icons/lock-locked.svg"
     },
-    unlocked: {
-        displayName: "Unlocked",
-        assetUrl: "assets/icons/lock-open.svg"
-    }
-}
-
-
-function getlockState() {
-    document.getElementById(LOCK_STATE_ID).innerHTML;
-}
+];
 
 function switchLock() {
-    state.locked = !state.locked;
+    state.lock = state.lock ? 0 : 1;
+    socket.emit('clientConfig',{key:"lock",value: state.lock});
     updateLockDisplay();
 }
 
 function updateLockDisplay() {
-    const lockState = state.locked ? "locked" : "unlocked";
+    console.log(state.lock)
     const lockStateElement = document.getElementById(LOCK_STATE_ID);
     const lockImgElement = document.getElementById(LOCK_IMG_ID);
-    lockStateElement.innerText = lockStates[lockState].displayName;
-    lockImgElement.setAttribute("src", lockStates[lockState].assetUrl);
+    lockStateElement.innerText = LOCK_STATES[state.lock].displayName;
+    lockImgElement.setAttribute("src", LOCK_STATES[state.lock].assetUrl);
 }
 
-updateLockDisplay();
+//# Song switching
+const SONG_NAMES = [
+    null,
+    "Song 1",
+    "Song 2",
+    "Song 3",
+    "Song 4",
+    "Song 5",
+    "Song 6",
+    "Song 7",
+    "Song 8",
+    "Song 9",
+    "Song 10",
+    "Song 11",
+    "Song 12",
+]
 
-// Module display
-const moduleNames = {
+function switchSong(songId) {
+    state.song = songId;
+    socket.emit('clientConfig',{key:"song",value: state.song});
+    updateSongDisplay();
+}
+
+function updateSongDisplay() {
+    const songDisplay = document.getElementById("songDisplay");
+    const songName = SONG_NAMES[state.song];
+    if (songName) songDisplay.innerText = songName;
+    else songDisplay.innerText = "No info available.";
+}
+
+//# Light settings
+document.getElementById('config-light1').addEventListener('input', (e) => {
+    const baseId = e.target.id;
+    const selectedLightMode = document.getElementById(`${baseId}-mode`).value;
+    if (e.target.checked) {
+        socket.emit('clientConfig',{key:`light${baseId.at(-1)}`, value: parseInt(selectedLightMode)});
+    } else {
+        socket.emit('clientConfig',{key:`light${baseId.at(-1)}`, value: 0});
+    }
+    updateLightModeSelector(baseId);
+});
+
+function updateLightModeSelector(baseId) {
+    const lightModeSlectorElement = document.getElementById(`${baseId}-mode`);
+    const disabled = !document.getElementById(baseId).checked;
+    lightModeSlectorElement.disabled = disabled;
+}
+
+
+//# Module display
+const MODULE_NAMES = {
     "lights-module": "Settings - Lights",
     "sound-module": "Settings - Sound",
     "magnet-module": "Settings - Magnet"
@@ -126,60 +211,12 @@ function displayInfo(option) {
     });
 
     window.localStorage.setItem("recentModule",option); //Remember selected module
-    document.getElementById("module-text").innerText = moduleNames[option]; //Update name
+    document.getElementById("module-text").innerText = MODULE_NAMES[option]; //Update name
 }
 
 displayInfo(window.localStorage.getItem("recentModule") ?? "lights-module");
 
-function displaySong(song) {
-    var songDisplay = document.getElementById("songDisplay");
-    switch (song) {
-        case 1:
-            songDisplay.innerHTML = "Song 1"
-            break;
-        case 2:
-            songDisplay.innerHTML = "Song 2";
-            break;
-        case 3:
-            songDisplay.innerHTML = "Song 3";
-            break;
-        case 4:
-            songDisplay.innerHTML = "Song 4";
-            break;
-        case 5:
-            songDisplay.innerHTML = "Song 5";
-            break;
-        case 6:
-            songDisplay.innerHTML = "Song 6";
-            break;
-        case 7:
-            songDisplay.innerHTML = "Song 7";
-            break;
-        case 8:
-            songDisplay.innerHTML = "Song 8";
-            break;
-        case 9:
-            songDisplay.innerHTML = "Song 9";
-            break;
-        case 10:
-            songDisplay.innerHTML = "Song 10";
-            break;
-        case 11:
-            songDisplay.innerHTML = "Song 11";
-            break;
-        case 12:
-            songDisplay.innerHTML = "Song 12";
-            break;
-
-
-        default:
-            infoDisplay.innerHTML = "No info available.";
-    }
-}
-
-
-
-
+//
 
     var popup = document.getElementById("settingsPopup");
     var btn = document.getElementById("settingsButton");
@@ -217,7 +254,6 @@ function displaySong(song) {
             popup2.style.display = "none";
         }
     }
-
 
 
 var slider = document.getElementById("myRange");

@@ -10,12 +10,10 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="background">
-
-    </div>
+    <div class="background"></div>
     <div class="body">
         <div class="headsup">
-            Logged in as: <a id="usernameHere"></a>
+            Logged in as: <span id="username-display"></span>
         </div>
             <div class="main">
                 <div class="left">
@@ -36,20 +34,18 @@
                                 <div class="lightsHolder">
                                     <div class="lightSwitch">
                                         <label class="switch">
-                                            <input type="checkbox" id="checkbox1">
+                                            <input type="checkbox" id="config-light1" disabled>
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
                                     
                                     <div class="selector">
                                         <label for="options">Mode:<label>
-                                        
-                                        <select name="options" id="options1">
-
-                                            <option value="Solid" id="L1Solid">Solid</option>
-                                            <option value="Blink2s" id="L1Blink2s">Blinks 2s</option>
-                                            <option value="Blink5s" id="L1Blink5s">Blink 5s</option>
-                                            <option value="Blink10s" id="L1Blink10s">Blink 10s</option>
+                                        <select name="options" id="config-light1-mode" disabled>
+                                            <option value="1" id="L1Solid">Solid</option>
+                                            <option value="2" id="L1Blink2s">Blinks 2s</option>
+                                            <option value="3" id="L1Blink5s">Blink 5s</option>
+                                            <option value="4" id="L1Blink10s">Blink 10s</option>
                                         </select> 
                                     </div>
 
@@ -61,20 +57,18 @@
                                 <div class="lightsHolder">
                                     <div class="lightSwitch">
                                         <label class="switch">
-                                            <input type="checkbox" id="checkbox2">
+                                            <input type="checkbox" id="config-light2" disabled>
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
                                     
                                     <div class="selector2">
                                         <label for="options2">Mode:<label>
-
-                                        <select name="options2" id="options2">
-
-                                            <option value="Solid" id="L2Solid">Solid</option>
-                                            <option value="Blink2s" id="L2Blink2s">Blinks 2s</option>
-                                            <option value="Blink5s" id="L2Blink5s">Blink 5s</option>
-                                            <option value="Blink10s" id="L2Blink10s">Blink 10s</option>
+                                        <select name="options2" id="config-light2-mode" disabled>
+                                            <option value="1" id="L2Solid">Solid</option>
+                                            <option value="2" id="L2Blink2s">Blinks 2s</option>
+                                            <option value="3" id="L2Blink5s">Blink 5s</option>
+                                            <option value="4" id="L2Blink10s">Blink 10s</option>
                                         </select> 
                                     </div>
 
@@ -86,20 +80,18 @@
                                 <div class="lightsHolder">
                                     <div class="lightSwitch">
                                         <label class="switch">
-                                            <input type="checkbox" id="checkbox3">
+                                            <input type="checkbox" id="config-light3" disabled>
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
                                     
                                     <div class="selector3">
                                         <label for="options3">Mode:<label>
-
-                                        <select name="options3" id="options3">
-
-                                            <option value="Solid" id="L3Solid">Solid</option>
-                                            <option value="Blink2s" id="L3Blink2s">Blinks 2s</option>
-                                            <option value="Blink5s" id="L3Blink5s">Blink 5s</option>
-                                            <option value="Blink10s" id="L3Blink10s">Blink 10s</option>
+                                        <select name="options3" id="config-light3-mode" disabled>
+                                            <option value="1" id="L3Solid">Solid</option>
+                                            <option value="2" id="L3Blink2s">Blinks 2s</option>
+                                            <option value="3" id="L3Blink5s">Blink 5s</option>
+                                            <option value="4" id="L3Blink10s">Blink 10s</option>
                                         </select> 
                                     </div>
 
@@ -118,36 +110,37 @@
                                 <div class="leftSound">
                                     <div class="songTitle">
 
-                                        <div id="songDisplay" class="songDisplay">                                            
+                                        <div id="songDisplay" class="songDisplay">
+                                            Loading...                                            
                                         </div>
 
 
                                     </div>
 
                                     <div class="slidecontainer">
-                                        <input type="range" min="1" max="100" value="50" class="range" id="myRange">
+                                        <input type="range" min="1" max="100" value="50" class="range" id="config-volume" disabled>
 
                                     </div>
 
                                     <div class="playButton">
-                                        <button id="playButton">Play</button>
+                                        <button id="config-play" disabled>Play</button>
                                     </div>
                                 
                                 </div>
                                 <div class="rightSound">
-                                    <div class="options">
-                                        <div class="option" onclick="displaySong(1)">Song 1</div>
-                                        <div class="option" onclick="displaySong(2)">Song 2</div>
-                                        <div class="option" onclick="displaySong(3)">Song 3</div>
-                                        <div class="option" onclick="displaySong(4)">Song 4</div>
-                                        <div class="option" onclick="displaySong(5)">Song 5</div>
-                                        <div class="option" onclick="displaySong(6)">Song 6</div>
-                                        <div class="option" onclick="displaySong(7)">Song 7</div>
-                                        <div class="option" onclick="displaySong(8)">Song 8</div>
-                                        <div class="option" onclick="displaySong(9)">Song 9</div>
-                                        <div class="option" onclick="displaySong(10)">Song 10</div>
-                                        <div class="option" onclick="displaySong(11)">Song 11</div>
-                                        <div class="option" onclick="displaySong(12)">Song 12</div>
+                                    <div class="options" id="config-songs">
+                                        <button class="option" onclick="switchSong(1)" disabled>Song 1</button>
+                                        <button class="option" onclick="switchSong(2)" disabled>Song 2</button>
+                                        <button class="option" onclick="switchSong(3)" disabled>Song 3</button>
+                                        <button class="option" onclick="switchSong(4)" disabled>Song 4</button>
+                                        <button class="option" onclick="switchSong(5)" disabled>Song 5</button>
+                                        <button class="option" onclick="switchSong(6)" disabled>Song 6</button>
+                                        <button class="option" onclick="switchSong(7)" disabled>Song 7</button>
+                                        <button class="option" onclick="switchSong(8)" disabled>Song 8</button>
+                                        <button class="option" onclick="switchSong(9)" disabled>Song 9</button>
+                                        <button class="option" onclick="switchSong(10)" disabled>Song 10</button>
+                                        <button class="option" onclick="switchSong(11)" disabled>Song 11</button>
+                                        <button class="option" onclick="switchSong(12)" disabled>Song 12</button>
                         
                                       </div>  
                                 </div>
@@ -168,12 +161,12 @@
                     </div>
                     <div class="unlock">
                         <div class="text" id="lock-state">
-                            Lock
+                            Loading...
                         </div> 
                         <div class="inside-module-unlock" id="lock-switch">
-                        <div class="unlock-img">
-                            <img id="lock-img" src="assets/icons/lock-locked.svg" alt="Lock Icon" onclick="switchLock()">
-                        </div>
+                        <button id="config-lock" class="unlock-img" onclick="switchLock()" disabled>
+                            <img id="lock-img" src="assets/icons/lock-unknown.svg" alt="Lock Icon">
+                        </button>
                         </div>
                     </div>
                 </div>
@@ -228,16 +221,9 @@
             <p>PavelDob23 - Communication and transmission protocols
             <p>Linhja - Ship model
         </div>
-    
     </div>
-
-
     <img src="/app/www/assets/icons/glight.png" id="light1" alt="Light1">
     <img src="/app/www/assets/icons/glight.png" id="light2" alt="Light2">
     <img src="/app/www/assets/icons/glight.png" id="light3" alt="Light3">
-
-    
 </body>
-
-
 </html>
