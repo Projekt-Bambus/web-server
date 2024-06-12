@@ -281,6 +281,8 @@
 
     color: white;
     font-family: CascadiaMono, monospace;
+
+    overflow: auto;
 }
 
 .inside-module-console p {
