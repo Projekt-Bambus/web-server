@@ -6,6 +6,7 @@ const socketIo = require('socket.io');
 const crypto = require('node:crypto');
 const db = require('./database.js');
 const Mqtt = require('./mqtt.js');
+const Log = require('./log.js');
 
 // Server setup
 const app = express();
@@ -20,12 +21,24 @@ const WEB_DIR = __dirname + '/www/';
 const CONFIG_DATA_RANGES = {
 	lock: { min: 0, max: 1 }, // Lock on/off
 	magnet: { min: 0, max: 1 }, // Magnet on/off
-	mute: { min: 0, max: 1 }, // Mute on/off
+	play: { min: 1, max: 1 }, // Mute on/off
 	volume: { min: 0, max: 100 }, // Volume 0 to 100
 	song: { min: 1, max: 12 }, // Song IDs 1 to 12
 	light1: { min: 0, max: 4 }, // Lights 1 to 3
 	light2: { min: 0, max: 4 }, // 0 = off
 	light3: { min: 0, max: 4 }, // 1 to 4 states on
+}
+
+// State cache
+const state = {
+	lock: 1,
+	magnet: 0,
+	volume: 50,
+	song: 1,
+	play: 0,
+	light1: 0,
+	light2: 0,
+	light3: 0
 }
 
 // Creates a new secure random key to secure the socket token
@@ -58,14 +71,18 @@ async function main() {
 	//## HTTP Routing
 	app.post("/login", bodyParser.json(), async (req,res) => {
 		// 400 - Invalid request - session exists already
-		if (req.cookies.sessionId && await verifySession(req.cookies.sessionId)) {
-			res.status(400).json({message:"Already logged in!"});
-			return;
+		try {
+			if (req.cookies.sessionId && await verifySession(req.cookies.sessionId)) {
+				res.status(400).json({message:"Already logged in!"});
+				return;
+			}
+		} catch {
+			res.status(500).send('INTERNAL SERVER ERROR - 500');
 		}
 		// 401 - Invalid login - wrong username or password
 		if (!await db.checkPassword(req.body.username,req.body.password)) {
 			res.status(401).json({ message: 'Login wrong!' });
-			console.log("Password check NICHT gut!");
+			Log.logMessage(`User '${req.body.username}' FAILED LOGIN IP:'${req.ip}'`, Log.LOG_TYPES.Info);
 			return;
 		}
 
@@ -82,6 +99,7 @@ async function main() {
 			res.status(500).json({message: 'Database query failed!'});
 			return;
 		}
+		Log.logMessage(`User '${req.body.username}' LOGIN IP:'${req.ip}'`, Log.LOG_TYPES.Info);
 		// Assigns the session ID and username with cookies and redirects to the home page
 		res.cookie("username",req.body.username,{expires:expireDate});
 		res.cookie("sessionId",sessionId,{expires: expireDate,httpOnly: true});
@@ -91,6 +109,7 @@ async function main() {
 	});
 
 	app.get("/logout", async (req,res) => {
+		Log.logMessage(`User '${req.cookies.username}' LOGOUT IP:'${req.ip}'`, Log.LOG_TYPES.Info);
 		await db.deleteSession(req.cookies.sessionId);
 		res.clearCookie("sessionId");
 		res.redirect("/login");
@@ -98,10 +117,14 @@ async function main() {
 
 	app.post("/socket-init", async (req,res) => {
 		// Verify legit session
-		if (!(req.cookies.sessionId && await verifySession(req.cookies.sessionId))) {
-			console.log("Socket init fail!");
-			res.status(400).json({message:"No session id!"});
-			return;
+		try {
+			if (!(req.cookies.sessionId && await verifySession(req.cookies.sessionId))) {
+				console.log("Socket init fail!");
+				res.status(400).json({message:"No session id!"});
+				return;
+			}
+		} catch {
+			res.status(500).send('INTERNAL SERVER ERROR - 500');
 		}
 		// Generate the token
 		const connectionToken = crypto.createHash('sha512').update(`${socketConnectionKey}${req.cookies.sessionId}`).digest('hex');
@@ -114,18 +137,22 @@ async function main() {
 	//### Redirects
 	app.use(async (req, res, next) => {
 		// Redirect from "/" to "/login" when no session exists
-		if (req.path === "/") {
-			if (!(req.cookies.sessionId && await verifySession(req.cookies.sessionId))) {
-				return res.redirect("/login");
+		try {
+			if (req.path === "/") {
+				if (!(req.cookies.sessionId && await verifySession(req.cookies.sessionId))) {
+					return res.redirect("/login");
+				}
 			}
-		}
-		// Redirect from "/login" to "/" when session exists
-		if (req.path === "/login") {
-			if (req.cookies.sessionId && await verifySession(req.cookies.sessionId)) {
-				return res.redirect("/");
+			// Redirect from "/login" to "/" when session exists
+			if (req.path === "/login") {
+				if (req.cookies.sessionId && await verifySession(req.cookies.sessionId)) {
+					return res.redirect("/");
+				}
 			}
+			next();
+		} catch {
+			res.status(500).send('INTERNAL SERVER ERROR - 500');
 		}
-		next();
 	});
 	//### Static website
 	app.use(
@@ -163,9 +190,10 @@ async function main() {
 	//### New socket connection
 	io.on('connection', (socket) => {
 		console.log("Socket connection...");
-    	socket.on('clientSync',(data) => {
+    	socket.on('clientSync',async(data) => {
     	    console.log(`ON: init - ${data}`);
-    	    socket.emit('serverSync', { config: {}, log: {}});
+			const logList = await Log.readFromLog(Log.LOG_TYPES.Info);
+    	    socket.emit('serverSync', { config: state, log: logList});
     	});
 		socket.on('clientConfig',(data) => {
 			console.log('on: clientConfig');
@@ -184,6 +212,7 @@ async function main() {
 			
 			Mqtt.sendMessage(data.key,data.value);
 			io.emit('serverConfig',data);
+			state[data.key] = data.value;
 
     	});
 		socket.on('disconnect', () => {
@@ -195,13 +224,13 @@ async function main() {
 	server.listen(EXPRESS_PORT, () => {
 		console.log(`Projekt bambus listening on port ${EXPRESS_PORT}`);
 	});
-}
 
-// Function to externally emit socket message.
-function emitSocketMsg(event,message) {
-	io.emit(event,message);
-	console.log(`Emitted: [${event}] - ${message.stringify()}`);
+	Log.logSubscribe((entry, type) => {
+		if (type <= Log.LOG_TYPES.Info) {
+			io.emit('serverLog', {entry,type,timestamp: new Date()});
+		}
+	})
 }
 
 //# server.js exports
-module.exports = { main, emitSocketMsg }
+module.exports = { main }

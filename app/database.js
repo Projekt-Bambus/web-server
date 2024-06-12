@@ -14,14 +14,6 @@ function toSqlDatetime(date) {
 
 async function main() {
     await cleanupSessions();
-    database.query("SELECT * from login", (err, result) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        console.log(result);
-    })
-    console.log("Running main database!");
 }
 
 async function cleanupSessions() {
@@ -30,7 +22,6 @@ async function cleanupSessions() {
         if (err) {
             console.error(err);
         }
-        console.log(result);
     })
 }
 
@@ -93,15 +84,16 @@ async function createSession(username, expireDate) {
             "INSERT INTO sessions (id, username, expires, timestamp) VALUES (?, ?, ?, NOW());",
             [sessionId,username,toSqlDatetime(expireDate)],
             (err, result) => {
-                console.log(`Session INSERT`);
                 if (err) {
                     reject(err);
                 }
-                console.log(result);
                 resolve(true);
             }
         )
-    );
+    ).catch((reason) => {
+        console.error(`Failed session INSERT!`);
+        console.error(reason);
+    });
     // Returns ID back for caller to use
     return sessionId;
 }

@@ -3,11 +3,6 @@
     src: url('/assets/fonts/CascadiaMono.woff2');
 }
 
-.config-disabled {
-    background-color: #6c6c6c;
-    color: #939393;
-}
-
 .background {
     position: fixed;
     top: 0;
@@ -505,7 +500,7 @@ input:disabled + .slider {
     margin-left: 5px;
 }
 
-.rightSound{
+.rightSound {
     border-top: 1px solid black;
     border-left: 1px solid black;
     border-right: 1px solid #868686;
@@ -525,7 +520,6 @@ input:disabled + .slider {
     background: none;
 
     width: 100%;
-    padding-bottom: 5px;
 
     font-size: 18px;
     color: white;

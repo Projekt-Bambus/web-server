@@ -1,10 +1,5 @@
 Notes:
-odpocet posledniho locknuti
-zvuk, hlasitost, nahrat
-zamek - viko
-svetla
-elektromagnet - switch
-logy - 
+https://www.transip.eu/knowledgebase/entry/2179-managing-mariadb-with-command-line/
 
 MQTT Data format:
 key:value
@@ -15,7 +10,7 @@ magnet:1||0
 
 Song controls
 volume:0-100
-play:1||0
+play:1
 song:1-12
 
 Light controls
