@@ -225,7 +225,8 @@ async function main() {
 	
 	//## Start of the whole Node.js server
 	server.listen(EXPRESS_PORT, () => {
-		Log.logMessage(`Projekt bambus listening on port ${EXPRESS_PORT}`,Log.LOG_TYPES.Debug);
+
+		Log.logMessage(`Projekt bambus listening on port ${EXPRESS_PORT} address: ${server.address()}`,Log.LOG_TYPES.Debug);
 	});
 
 	Log.logSubscribe((entry, type) => {
