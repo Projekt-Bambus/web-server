@@ -1,4 +1,4 @@
-const Log = require('log.js');
+const Log = require('./log.js');
 const mysql = require('mysql2');
 const crypto = require('node:crypto');
 
