@@ -17,6 +17,7 @@ const io = new socketIo.Server(server, {
 
 // Constants
 const EXPRESS_PORT = process.env.WEB_PORT;
+const EXPRESS_IP = process.env.WEB_IP;
 const WEB_DIR = __dirname + '/www/';
 const CONFIG_DATA_RANGES = {
 	lock: { min: 0, max: 1 }, // Lock on/off
@@ -224,7 +225,7 @@ async function main() {
 	});
 	
 	//## Start of the whole Node.js server
-	server.listen(EXPRESS_PORT,'10.0.1.15', () => {
+	server.listen(EXPRESS_PORT,EXPRESS_IP, () => {
 		Log.logMessage(`Projekt bambus listening on port ${EXPRESS_PORT} address: ${JSON.stringify(server.address())}`,Log.LOG_TYPES.Debug);
 	});
 
