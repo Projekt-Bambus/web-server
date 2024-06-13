@@ -13,6 +13,7 @@ async function main() {
     console.log("Loading mqtt.js module.");
     Mqtt.main();
     console.log("Loading done.");
+    Log.logMessage('Server started!', Log.LOG_TYPES.Info);
 }
 
 main();

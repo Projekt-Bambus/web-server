@@ -16,10 +16,11 @@ function mqttSubscribe(callback) {
 }
 
 async function main() {
+	Log.logMessage(`Starting MQTT Client, connect attempt.`,Log.LOG_TYPES.Info);
 	mqttClient = mqtt.connect(process.env.MQTT_BROKER_ADDRESS,{
 		keepalive: 60,
 		protocolId: "MQTT",
-		clientId: "test-client",
+		clientId: `test-client-${Math.round(Math.random()*100000)}`,
 		clean: true,
 		reconnectPeriod: 1000,
 		connectTimeout: 30 * 1000,
@@ -29,6 +30,7 @@ async function main() {
 	
 	mqttClient.on("error", (err) => {
 		Log.logMessage(`MQTT Error: ${err}`, Log.LOG_TYPES.Error);
+		console.error(err);
 		mqttClient.end();
 	});
 	
@@ -36,13 +38,12 @@ async function main() {
 		Log.logMessage("MQTT Reconnecting...", Log.LOG_TYPES.Info);
 	});
 	mqttClient.on("connect", () => {
-		console.log(`MQTT Client connected to '${process.env.MQTT_BROKER_ADDRESS}'`);
 		Log.logMessage(`MQTT Client connected to '${process.env.MQTT_BROKER_ADDRESS}'`,Log.LOG_TYPES.Info);
 		mqttClient.subscribe(TOPIC_RECIEVE, (err) => {
 			console.log(`MQTT Subscribe to ${TOPIC_RECIEVE}!`);
 			if (err) {
-				Log.logMessage('MQTT Subscribe Error!',Log.LOG_TYPES.Error);
-				Log.logMessage(err,Log.LOG_TYPES.Error);
+				Log.logMessage(`MQTT Subscribe Error! ${err}`,Log.LOG_TYPES.Error);
+				console.error(err);
 			}
 		});
 	});

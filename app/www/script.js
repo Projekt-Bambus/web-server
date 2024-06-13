@@ -55,6 +55,7 @@ async function initialize() {
     // Prepare socket events
     socket.on('serverLog', (data) => {
         console.log('ON: serverLog');
+        new Date().to
         const message = `[${data.timestamp?.toLocaleString()}] ${data.entry}`;
         const logElement = document.getElementById('log');
         logElement.innerHTML = `<p>${message}</p>${logElement.innerHTML}`;

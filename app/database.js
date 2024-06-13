@@ -20,6 +20,7 @@ async function cleanupSessions() {
     database.query("DELETE FROM sessions WHERE expires < NOW();", (err, result) => {
         console.log("Session CLEANUP");
         if (err) {
+            Log.logMessage(`Error during db session cleanup: ${err}`,Log.LOG_TYPES.Error);
             console.error(err);
         }
     })
@@ -39,7 +40,7 @@ async function checkPassword(username,password) {
             resolve(realPasswordHash == inputPasswordHash);
         })
     ).catch((reason) => {
-        console.error(`Failed password check!`);
+        Log.logMessage(`DB Failed Password Check user '${username}': ${reason}`,Log.LOG_TYPES.Error);
         console.error(reason);
     });
     return isCorrect === true;
@@ -55,7 +56,7 @@ async function getSession(sessionId) {
             resolve(result);
         })
     ).catch((reason) => {
-        console.error(`Failed session select!`);
+        Log.logMessage(`DB Failed Session SELECT: ${reason}`,Log.LOG_TYPES.Error);
         console.error(reason);
     });
     return sessionData;
@@ -91,7 +92,7 @@ async function createSession(username, expireDate) {
             }
         )
     ).catch((reason) => {
-        console.error(`Failed session INSERT!`);
+        Log.logMessage(`DB Failed Session INSERT: ${reason}`,Log.LOG_TYPES.Error);
         console.error(reason);
     });
     // Returns ID back for caller to use

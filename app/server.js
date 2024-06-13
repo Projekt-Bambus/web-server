@@ -43,7 +43,7 @@ const state = {
 
 // Creates a new secure random key to secure the socket token
 const socketConnectionKey = crypto.randomBytes(32).toString('hex');
-console.log(`Socket secret: ${socketConnectionKey}`);
+Log.logMessage(`Socket secret: ${socketConnectionKey}`,Log.LOG_TYPES.Debug);
 // Saves current socket tokens in memory, cleanup might be ideal on larger scale
 const socketConnectionTokens = new Map();
 
@@ -65,7 +65,7 @@ async function main() {
 	//## HTTP Pre-Route Middlewear 
 	app.use(cookieParser());
 	app.use((req,res,next) => {
-		console.log(`${req.path} [${req.method}] from ${req.ip}`);
+		Log.logMessage(`${req.path} [${req.method}] from ${req.ip}`,Log.LOG_TYPES.Debug);
 		next();
 	})
 	//## HTTP Routing
@@ -94,7 +94,7 @@ async function main() {
 		try {
 			sessionId = await db.createSession(req.body.username,expireDate);
 		} catch (err) {
-			console.error('Error when creating session:');
+			Log.logMessage(`Error when creating session: ${err}`,Log.LOG_TYPES.Error);
 			console.error(err);
 			res.status(500).json({message: 'Database query failed!'});
 			return;
@@ -129,7 +129,7 @@ async function main() {
 		// Generate the token
 		const connectionToken = crypto.createHash('sha512').update(`${socketConnectionKey}${req.cookies.sessionId}`).digest('hex');
 		socketConnectionTokens.set(connectionToken, req.cookies.sessionId);
-		console.log(`Socket init success! ${connectionToken}`);
+		Log.logMessage(`Socket init success! ${connectionToken}`,Log.LOG_TYPES.Debug);
 		// Send the token back
 		res.status(200).json({token:`${connectionToken}`});
 	});
@@ -150,8 +150,10 @@ async function main() {
 				}
 			}
 			next();
-		} catch {
-			res.status(500).send('INTERNAL SERVER ERROR - 500');
+		} catch (error) {
+			Log.logMessage(`INTERNAL SERVER ERROR during redirect! ${error}`,Log.LOG_TYPES.Error);
+			console.error(error);
+			res.status(500).send(`INTERNAL SERVER ERROR - 500 Err: ${error}`);
 		}
 	});
 	//### Static website
@@ -179,23 +181,24 @@ async function main() {
 	io.use((socket, next) => {
 		const token = socket.handshake.auth.token;
 		if (socketConnectionTokens.has(token)) {
-			console.log("Success authenticating socket token!");
+			Log.logMessage("Success authenticating socket token!",Log.LOG_TYPES.Debug);
 			next();
 		} else {
-			console.log("Failed authenticating socket token!");
+			Log.logMessage("Failed authenticating socket token!",Log.LOG_TYPES.Debug);
 			socket.disconnect();
 		}
 	});
 	//## Socket.io Events
 	//### New socket connection
 	io.on('connection', (socket) => {
-		console.log("Socket connection...");
+		Log.logMessage("Socket connection...",Log.LOG_TYPES.Debug);
     	socket.on('clientSync',async(data) => {
-    	    console.log(`ON: init - ${data}`);
+			Log.logMessage(`ON: init - ${data}`,Log.LOG_TYPES.Debug);
 			const logList = await Log.readFromLog(Log.LOG_TYPES.Info);
     	    socket.emit('serverSync', { config: state, log: logList});
     	});
 		socket.on('clientConfig',(data) => {
+			
 			console.log('on: clientConfig');
 			console.log(data);
 			if (
@@ -206,7 +209,7 @@ async function main() {
 					data.value > CONFIG_DATA_RANGES[data.key].max
 				) // Value out of range
 			) {
-				console.warn(`Socket recieved invalid client config!\npropId:'${data.key}' value:'${data.value}'`);
+				Log.logMessage(`Socket recieved invalid client config!\npropId:'${data.key}' value:'${data.value}'`,Log.LOG_TYPES.Warn);
 				return;
 			}
 			
@@ -222,7 +225,7 @@ async function main() {
 	
 	//## Start of the whole Node.js server
 	server.listen(EXPRESS_PORT, () => {
-		console.log(`Projekt bambus listening on port ${EXPRESS_PORT}`);
+		Log.logMessage(`Projekt bambus listening on port ${EXPRESS_PORT}`,Log.LOG_TYPES.Debug);
 	});
 
 	Log.logSubscribe((entry, type) => {
