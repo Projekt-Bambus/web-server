@@ -1,3 +1,4 @@
+const Log = require('./log.js');
 const mysql = require('mysql2');
 const crypto = require('node:crypto');
 
@@ -14,23 +15,15 @@ function toSqlDatetime(date) {
 
 async function main() {
     await cleanupSessions();
-    database.query("SELECT * from login", (err, result) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-        console.log(result);
-    })
-    console.log("Running main database!");
 }
 
 async function cleanupSessions() {
     database.query("DELETE FROM sessions WHERE expires < NOW();", (err, result) => {
         console.log("Session CLEANUP");
         if (err) {
+            Log.logMessage(`Error during db session cleanup: ${err}`,Log.LOG_TYPES.Error);
             console.error(err);
         }
-        console.log(result);
     })
 }
 
@@ -48,7 +41,7 @@ async function checkPassword(username,password) {
             resolve(realPasswordHash == inputPasswordHash);
         })
     ).catch((reason) => {
-        console.error(`Failed password check!`);
+        Log.logMessage(`DB Failed Password Check user '${username}': ${reason}`,Log.LOG_TYPES.Error);
         console.error(reason);
     });
     return isCorrect === true;
@@ -64,7 +57,7 @@ async function getSession(sessionId) {
             resolve(result);
         })
     ).catch((reason) => {
-        console.error(`Failed session select!`);
+        Log.logMessage(`DB Failed Session SELECT: ${reason}`,Log.LOG_TYPES.Error);
         console.error(reason);
     });
     return sessionData;
@@ -93,15 +86,16 @@ async function createSession(username, expireDate) {
             "INSERT INTO sessions (id, username, expires, timestamp) VALUES (?, ?, ?, NOW());",
             [sessionId,username,toSqlDatetime(expireDate)],
             (err, result) => {
-                console.log(`Session INSERT`);
                 if (err) {
                     reject(err);
                 }
-                console.log(result);
                 resolve(true);
             }
         )
-    );
+    ).catch((reason) => {
+        Log.logMessage(`DB Failed Session INSERT: ${reason}`,Log.LOG_TYPES.Error);
+        console.error(reason);
+    });
     // Returns ID back for caller to use
     return sessionId;
 }

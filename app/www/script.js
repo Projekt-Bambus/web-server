@@ -1,9 +1,6 @@
 const LOCK_STATE_ID = "lock-state";
 const LOCK_SWITCH_ID = "lock-switch";
 const LOCK_IMG_ID = "lock-img";
-const VOLUME_IMG_ID = "volume-img";
-const VOLUME_SLIDER_ID = "volume-slider";
-const VOLUME_SWITCH_ID = "volume-switch";
 
 // URL constants
 const ROOT_URL = location.protocol + '//' + location.host;
@@ -12,18 +9,9 @@ const SOCKET_INIT_URL = ROOT_URL + "/socket-init";
 // ID constants
 const SOCKET_TOKEN_STORAGE_ID = "socketToken";
 
-let initialSync = false;
 const state = {
     lock: 1,
-    magnet: 0, //!!
-
-    play: 1, //??
-    volume: 50,
     song: 1,
-
-    light1: 0,
-    light2: 2,
-    light3: 1,
 }
 
 let socket;
@@ -66,59 +54,88 @@ async function initialize() {
     });
     // Prepare socket events
     socket.on('serverLog', (data) => {
-        console.log('ON: serverLog'); 
-        console.log(data);
+        console.log('ON: serverLog');
+        new Date().to
+        const message = `[${data.timestamp?.toLocaleString()}] ${data.entry}`;
+        const logElement = document.getElementById('log');
+        logElement.innerHTML = `<p>${message}</p>${logElement.innerHTML}`;
     });
     socket.on('serverConfig', (data) => {
-        state[data.key] = data.value;
-        updateLockDisplay();
-        updateSongDisplay();
+        updateConfig(data);
         console.log('ON: serverConfig'); 
         console.log(data);
     });
     // Synchronise client-server
     socket.on('serverSync', (data) => {
-        initialSync = true;
         console.log(data);
         for (key in data.config) {
-            state[key] = data.config[key];
+            updateConfig({key,value: data.config[key]});
         }
         enableAllInput();
-        updateLockDisplay();
-        updateSongDisplay();
+        initializeLights();
+
+        // ### Log
+        const logElement = document.getElementById('log');
+        for (const logEntry of data.log) {
+            const message = `[${logEntry.timestamp?.toLocaleString()}] ${logEntry.entry}`;
+            logElement.innerHTML = `<p>${message}</p>${logElement.innerHTML}`;
+        }
     })
     socket.emit('clientSync', { config: true, logHistory: 5 });
 }
 
 initialize();
-//Volume
-/*
-let volume = 0;
-let muted = false;
-function switchVolume() {
-    muted = !muted;
-    updateVolumeDisplay();
+
+function updateConfig(data) {
+    switch (data.key) {
+        case 'lock':
+            state.lock = data.value;
+            updateLockDisplay();
+            break;
+        case 'song':
+            state.song = data.value;
+            updateSongDisplay();
+            break;
+        case 'magnet':
+            document.getElementById('config-magnet').checked = (data.value == 1)
+            break;
+        case 'volume':
+            console.log(data.value);
+            document.getElementById('config-volume').value = `${data.value}`;
+            break;
+        case 'light1':
+        case 'light2':
+        case 'light3':
+            const lightNumber = data.key.at(-1);
+            const baseId = `config-light${lightNumber}`;
+            if (data.value > 0) {
+                document.getElementById(baseId).checked = true;
+                document.getElementById(`${baseId}-mode`).value = `${data.value}`;
+            } else { 
+                document.getElementById(baseId).checked = false;
+            }
+            updateLightModeSelector(baseId);
+            updateLight(LIGHT_SET[lightNumber]);
+            break;
+    }
 }
-document.getElementById(VOLUME_SLIDER_ID).addEventListener("input", (event) => {
-    console.log(event.target.value)
-    updateVolumeDisplay();
+
+
+//# Volume
+document.getElementById('config-volume').addEventListener('change', (e) => {
+    socket.emit("clientConfig",{key: "volume", value: parseInt(e.target.value)});
+});
+
+//# Play
+document.getElementById('config-play').addEventListener('click', (e) => {
+    socket.emit("clientConfig",{key: "play", value: 1});
+});
+
+//# Magnet toggle
+document.getElementById('config-magnet').addEventListener('input', (e) => {
+    console.log(e);
+    socket.emit('clientConfig',{key: 'magnet', value: e.target.checked ? 1 : 0});
 })
-
-function getVolumeIcon() {
-    const volume = document.getElementById(VOLUME_SLIDER_ID).value;
-    if (muted) return "assets/icons/volume-off.svg";
-    if (volume < 50) return "assets/icons/volume-down.svg"
-    return "assets/icons/volume-up.svg"
-}
-
-function updateVolumeDisplay() {
-    const volumeImageElement = document.getElementById(VOLUME_IMG_ID);
-    volumeImageElement.setAttribute("src", getVolumeIcon());
-}
-
-
-updateVolumeDisplay();
-*/
 
 //# Locking
 
@@ -178,16 +195,30 @@ function updateSongDisplay() {
 }
 
 //# Light settings
-document.getElementById('config-light1').addEventListener('input', (e) => {
-    const baseId = e.target.id;
-    const selectedLightMode = document.getElementById(`${baseId}-mode`).value;
-    if (e.target.checked) {
-        socket.emit('clientConfig',{key:`light${baseId.at(-1)}`, value: parseInt(selectedLightMode)});
-    } else {
-        socket.emit('clientConfig',{key:`light${baseId.at(-1)}`, value: 0});
+
+function initializeLights() {
+    for (let i = 1; i <= 3;i++) {
+        document.getElementById(`config-light${i}`).addEventListener('input', (e) => {
+            const baseId = e.target.id;
+            const selectedLightMode = document.getElementById(`${baseId}-mode`).value;
+            if (e.target.checked) {
+                socket.emit('clientConfig',{key:`light${i}`, value: parseInt(selectedLightMode)});
+            } else {
+                socket.emit('clientConfig',{key:`light${i}`, value: 0});
+            }
+            updateLightModeSelector(baseId);
+            updateLight(LIGHT_SET[i]);
+        });
+        document.getElementById(`config-light${i}-mode`).addEventListener('change', (e) => {
+            const selectedLightMode = e.target.value;
+            socket.emit('clientConfig',{key:`light${i}`, value: parseInt(selectedLightMode)});
+            updateLight(LIGHT_SET[i]);
+            console.log(e.target.value);
+        });
+        updateLightModeSelector(`config-light${i}`);
+        updateLight(LIGHT_SET[i]);
     }
-    updateLightModeSelector(baseId);
-});
+}
 
 function updateLightModeSelector(baseId) {
     const lightModeSlectorElement = document.getElementById(`${baseId}-mode`);
@@ -216,122 +247,95 @@ function displayInfo(option) {
 
 displayInfo(window.localStorage.getItem("recentModule") ?? "lights-module");
 
-//
+//# Popups
 
-    var popup = document.getElementById("settingsPopup");
-    var btn = document.getElementById("settingsButton");
-    var span = document.getElementById("closePopup");
+const popup = document.getElementById("settingsPopup");
 
-    btn.onclick = function() {
-        popup.style.display = "flex";
-    }
+document.getElementById("settingsButton").onclick = function() {
+    popup.style.display = "flex";
+}
 
-    span.onclick = function() {
+document.getElementById("closePopup").onclick = function() {
+    popup.style.display = "none";
+}
+
+const popup2 = document.getElementById("aboutPopup");
+
+document.getElementById("aboutButton").onclick = function() {
+    popup2.style.display = "flex";
+}
+
+document.getElementById("closePopup2").onclick = function() {
+    popup2.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == popup) {
         popup.style.display = "none";
     }
-
-    window.onclick = function(event) {
-        if (event.target == popup) {
-            popup.style.display = "none";
-        }
-    }
-
-
-    var popup2 = document.getElementById("aboutPopup");
-    var btn2 = document.getElementById("aboutButton");
-    var span2 = document.getElementById("closePopup2");
-
-    btn2.onclick = function() {
-        popup2.style.display = "flex";
-    }
-
-    span2.onclick = function() {
+    if (event.target == popup2) {
         popup2.style.display = "none";
     }
+}
 
-    window.onclick = function(event) {
-        if (event.target == popup2) {
-            popup2.style.display = "none";
-        }
+//
+const LIGHT_SET = [
+    null,
+    { selectId: 'config-light1-mode', checkboxId: 'config-light1', imageId: 'light1' },
+    { selectId: 'config-light2-mode', checkboxId: 'config-light2', imageId: 'light2' },
+    { selectId: 'config-light3-mode', checkboxId: 'config-light3', imageId: 'light3' },
+];
+
+const submitButton = document.getElementById('lightSubmitButton');
+const blinkIntervals = {};
+
+function updateLight(lightSet) {
+    const selectElement = document.getElementById(lightSet.selectId);
+    const checkboxElement = document.getElementById(lightSet.checkboxId);
+    const lightImage = document.getElementById(lightSet.imageId);
+
+    if (blinkIntervals[lightSet.imageId]) {
+        clearInterval(blinkIntervals[lightSet.imageId]);
     }
 
-
-var slider = document.getElementById("myRange");
-var output = document.getElementById("demo");
-
-document.addEventListener('DOMContentLoaded', function () {
-    const sets = [
-        { selectId: 'options1', checkboxId: 'checkbox1', imageId: 'light1' },
-        { selectId: 'options2', checkboxId: 'checkbox2', imageId: 'light2' },
-        { selectId: 'options3', checkboxId: 'checkbox3', imageId: 'light3' }
-    ];
-
-    const submitButton = document.getElementById('lightSubmitButton');
-    const blinkIntervals = {};
-
-    if (!submitButton) {
-        console.error('Submit button not found');
+    if (!checkboxElement.checked) {
+        console.log(`Turning off the light ${lightSet.imageId}`);
+        lightImage.style.display = 'none';
         return;
     }
 
-    submitButton.addEventListener('click', function () {
-        sets.forEach(set => {
-            const selectElement = document.getElementById(set.selectId);
-            const checkboxElement = document.getElementById(set.checkboxId);
-            const lightImage = document.getElementById(set.imageId);
+    const selectedOption = selectElement.value;
+    console.log(`Selected Option for ${lightSet.selectId}:`, selectedOption);
 
-            if (!selectElement || !checkboxElement || !lightImage) {
-                console.error(`Elements for set ${set.selectId} not found`);
-                return;
-            }
+    switch (selectedOption) {
+        case '1':
+            console.log(`Setting light ${lightSet.imageId} to solid`);
+            lightImage.style.display = 'block';
+            break;
+        case '2':
+            console.log(`Setting light ${lightSet.imageId} to blink every 2 seconds`);
+            blinkImage(2000,lightSet.imageId);
+            break;
+        case '3':
+            console.log(`Setting light ${lightSet.imageId} to blink every 5 seconds`);
+            blinkImage(5000,lightSet.imageId);
+            break;
+        case '4':
+            console.log(`Setting light ${lightSet.imageId} to blink every 10 seconds`);
+            blinkImage(10000,lightSet.imageId);
+            break;
+        default:
+            console.log('Unknown option selected');
+            break;
+    }
+}
 
-            function updateLight() {
-                if (blinkIntervals[set.imageId]) {
-                    clearInterval(blinkIntervals[set.imageId]);
-                }
-
-                if (!checkboxElement.checked) {
-                    console.log(`Turning off the light ${set.imageId}`);
-                    lightImage.style.display = 'none';
-                    return;
-                }
-
-                const selectedOption = selectElement.value;
-                console.log(`Selected Option for ${set.selectId}:`, selectedOption);
-
-                switch (selectedOption) {
-                    case 'Solid':
-                        console.log(`Setting light ${set.imageId} to solid`);
-                        lightImage.style.display = 'block';
-                        break;
-                    case 'Blink2s':
-                        console.log(`Setting light ${set.imageId} to blink every 2 seconds`);
-                        blinkImage(2000);
-                        break;
-                    case 'Blink5s':
-                        console.log(`Setting light ${set.imageId} to blink every 5 seconds`);
-                        blinkImage(5000);
-                        break;
-                    case 'Blink10s':
-                        console.log(`Setting light ${set.imageId} to blink every 10 seconds`);
-                        blinkImage(10000);
-                        break;
-                    default:
-                        console.log('Unknown option selected');
-                        break;
-                }
-            }
-
-            function blinkImage(interval) {
-                lightImage.style.display = 'block';
-                let visible = true;
-                blinkIntervals[set.imageId] = setInterval(function () {
-                    lightImage.style.display = visible ? 'none' : 'block';
-                    visible = !visible;
-                }, interval);
-            }
-
-            updateLight();
-        });
-    });
-});
+function blinkImage(interval, lightImageId) {
+    const lightImage = document.getElementById(lightImageId);
+    lightImage.style.display = 'block';
+    let visible = true;
+    blinkIntervals[lightImageId] = setInterval(function () {
+        lightImage.style.display = visible ? 'none' : 'block';
+        visible = !visible;
+    }, interval);
+}
