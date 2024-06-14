@@ -81,12 +81,12 @@
     width: 300px;
     height: 140px;
     margin-top: -10px;
-    margin-left: 220px;
+    margin-left: 190px;
 }
 
 .promo img {
-    width: 300px;
-    height: 140px;
+    width: 350px;
+    height: 160px;
 }
 
 .starship {
@@ -757,9 +757,18 @@ input:disabled + .slider {
 
 .inside-magnet-module {
     border: 1px transparent black;
-    width: 80px;
+    width: 120px;
     height: 35px;
 
     margin-top: 100px;
-    margin-left: 220px;
+    margin-left: 200px;
+}
+
+#username-display {
+    color: orange;
+}
+
+#ournames {
+    color: orange;
+    
 }
